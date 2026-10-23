@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Business Health Check | Accent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   BRAND SETTINGS – change these to match Accent's brand
+   ============================================================ */
+:root{
+  --brand:#1f4e5f;        /* primary colour */
+  --brand-dark:#163a47;
+  --accent:#e2884a;       /* highlight colour */
+  --bg:#f6f4ef;
+  --card:#ffffff;
+  --ink:#1d2327;
+  --muted:#5d6970;
+  --line:#e3e0d8;
+  --low:#c8553d; --mid:#e2a64a; --good:#5a9e6f; --great:#2f7d5b;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:28px 16px 48px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:32px;box-shadow:0 1px 2px rgba(0,0,0,.03),0 8px 30px rgba(0,0,0,.04)}
+h1,h2{font-family:Fraunces,Georgia,serif;font-weight:600;line-height:1.2;margin:0 0 12px;color:var(--brand-dark)}
+h1{font-size:clamp(28px,5vw,38px)} h2{font-size:clamp(22px,4vw,28px)}
+p{margin:0 0 14px} .muted{color:var(--muted)}
+.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:600;color:var(--accent);margin-bottom:10px}
+.btn{appearance:none;border:0;border-radius:999px;background:var(--brand);color:#fff;font:600 16px Inter,sans-serif;padding:14px 26px;cursor:pointer;transition:background .15s,transform .05s}
+.btn:hover{background:var(--brand-dark)} .btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--line)}
+.btn.ghost:hover{border-color:var(--brand);background:transparent}
+.row{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:28px}
+.ticks{list-style:none;padding:0;margin:18px 0 24px;display:grid;gap:8px}
+.ticks li{padding-left:28px;position:relative}
+.ticks li:before{content:"";position:absolute;left:0;top:5px;width:16px;height:16px;border-radius:50%;background:var(--accent);opacity:.9;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='8'/%3E%3C/svg%3E")}
+.ticks li:after{content:"";position:absolute;left:5px;top:8px;width:6px;height:3px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg)}
+.meta{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+
+/* progress */
+.progress{margin-bottom:22px}
+.progress .bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.progress .fill{height:100%;background:var(--accent);width:0;transition:width .35s ease}
+.progress .lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:8px}
+
+/* questions */
+.q{padding:20px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:0}
+.q h3{font-size:16px;font-weight:600;margin:0 0 12px}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.scale label{position:relative;cursor:pointer}
+.scale input{position:absolute;opacity:0;pointer-events:none}
+.scale span{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:58px;padding:8px 4px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;color:var(--muted);transition:all .12s;background:#fff}
+.scale span b{font-size:16px;color:var(--ink);font-weight:600}
+.scale label:hover span{border-color:var(--brand)}
+.scale input:checked + span{border-color:var(--brand);background:var(--brand);color:#fff}
+.scale input:checked + span b{color:#fff}
+.scale input:focus-visible + span{outline:3px solid color-mix(in srgb,var(--accent) 60%,transparent);outline-offset:2px}
+@media (max-width:560px){
+  .card{padding:22px 18px}
+  .scale{grid-template-columns:1fr;gap:6px}
+  .scale span{flex-direction:row;justify-content:flex-start;gap:10px;min-height:44px;padding:8px 14px;text-align:left}
+}
+
+/* form */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.grid2{grid-template-columns:1fr}}
+.field label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.field input,.field select{width:100%;font:16px Inter,sans-serif;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--brand)}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted);margin-top:18px}
+.consent input{margin-top:4px;width:18px;height:18px;accent-color:var(--brand)}
+.err{color:var(--low);font-size:14px;margin-top:10px;min-height:20px}
+
+/* results */
+.hero{display:grid;grid-template-columns:200px 1fr;gap:28px;align-items:center}
+@media (max-width:600px){.hero{grid-template-columns:1fr;text-align:center}.dial{margin:0 auto}}
+.dial{position:relative;width:200px;height:200px}
+.dial svg{transform:rotate(-90deg)}
+.dial .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dial .num b{font:600 54px Fraunces,Georgia,serif;color:var(--brand-dark);line-height:1}
+.dial .num small{color:var(--muted);font-size:14px}
+.band{display:inline-block;padding:5px 14px;border-radius:99px;font-size:13px;font-weight:600;color:#fff;margin-bottom:10px}
+.areas{margin-top:30px;display:grid;gap:14px}
+.area .top{display:flex;justify-content:space-between;font-size:15px;margin-bottom:6px}
+.area .top b{font-weight:600}
+.area .bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+.area .fill{height:100%;border-radius:99px;width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.focus{margin-top:30px;display:grid;gap:12px}
+.focus .item{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:14px 16px;background:#fcfbf8}
+.focus .item b{display:block;margin-bottom:4px}
+.next{margin-top:30px;background:var(--brand);color:#fff;border-radius:var(--radius);padding:24px}
+.next h3{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:21px;margin:0 0 8px}
+.next p{color:rgba(255,255,255,.85);margin:0}
+.next .btn{background:var(--accent);margin-top:16px}
+.small{font-size:13px;color:var(--muted);margin-top:18px}
+.hidden{display:none!important}
+.fade{animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   SETTINGS – edit these before publishing
+   ============================================================ */
+const CONFIG = {
+  brandName: "Accent",
+  toolName: "Business Health Check",
+  // Paste your Zapier / Make / n8n / CRM webhook URL here.
+  // Each completed assessment is POSTed as form fields (see buildPayload()).
+  webhookUrl: "",
+  // Where the "Book a free chat" button goes (leave blank to hide it)
+  bookingUrl: "",
+  followUpPromise: "within 2 business days",
+  privacyUrl: "" // optional link to your privacy policy
+};
+
+/* ============================================================
+   QUESTIONS – 8 areas × 3 statements, rated 0–4
+   ============================================================ */
+const AREAS = [
+  { id:"strategy", name:"Strategy & Direction",
+    qs:["I have a clear written plan for where the business is heading over the next 1–3 years.",
+        "I know exactly who my ideal customer is and what makes us different from competitors.",
+        "I set specific goals and review progress against them at least quarterly."],
+    tip:"Write a one-page plan: your 3-year vision, this year's three priorities and the numbers that will tell you you're on track. Review it every quarter."},
+  { id:"finance", name:"Financial Health",
+    qs:["I know my profit margins on my main products or services.",
+        "I forecast cash flow and rarely get caught short.",
+        "I review a profit & loss report and key numbers every month."],
+    tip:"Set up a simple 13-week cash-flow forecast and a monthly 30-minute 'numbers meeting' with yourself or your accountant."},
+  { id:"sales", name:"Sales & Marketing",
+    qs:["I have a consistent, predictable way of attracting new enquiries.",
+        "I track how many enquiries turn into paying customers.",
+        "Our pricing reflects the value we deliver, and I review it at least yearly."],
+    tip:"Pick your one or two best lead sources and do them consistently. Start tracking enquiries → quotes → sales so you know your conversion rate."},
+  { id:"customers", name:"Customer Experience",
+    qs:["I regularly ask customers for feedback and act on what they tell me.",
+        "A good share of our work comes from repeat customers or referrals.",
+        "Customers get a consistent experience no matter who in the team serves them."],
+    tip:"Ask your last 10 customers two questions: 'What did we do well?' and 'What one thing could we do better?' Then fix the most common answer."},
+  { id:"operations", name:"Operations & Systems",
+    qs:["Our key processes are documented so others can follow them.",
+        "Day-to-day work runs smoothly without constant firefighting.",
+        "We use software and tools that save time rather than create extra work."],
+    tip:"Document the three tasks you do most often as simple checklists. Those become the foundation for delegating and for training new staff."},
+  { id:"people", name:"People & Team",
+    qs:["Everyone in the business knows what is expected of them and how success is measured.",
+        "I can attract and keep good people (or reliable contractors).",
+        "We have regular check-ins or one-to-ones with team members."],
+    tip:"Give each role a short 'what good looks like' description with 3–5 measures, and hold a 15-minute one-to-one with each person every fortnight."},
+  { id:"owner", name:"Owner Wellbeing & Time",
+    qs:["The business could run for two weeks without me.",
+        "I spend most of my time working ON the business, not just IN it.",
+        "My workload and stress levels are sustainable."],
+    tip:"Track your time for one week. Identify the low-value tasks you could delegate or automate, and block two hours a week for planning."},
+  { id:"growth", name:"Growth & Resilience",
+    qs:["We have a buffer of cash or finance to handle a tough quarter.",
+        "We are not overly reliant on one customer, supplier or person.",
+        "I have a clear idea of what the business is worth and how to increase that value."],
+    tip:"Aim to build a cash reserve of at least 2–3 months' costs, and check whether any single customer makes up more than 20% of revenue."}
+];
+
+const SCALE = [
+  {v:0,t:"Not at all"},{v:1,t:"Rarely"},{v:2,t:"Sometimes"},{v:3,t:"Mostly"},{v:4,t:"Fully"}
+];
+
+const BANDS = [
+  {min:80,label:"Thriving",colour:"var(--great)",
+   text:"Your business has strong foundations across most areas. The opportunity now is fine-tuning and scaling what already works."},
+  {min:60,label:"Established",colour:"var(--good)",
+   text:"You have solid foundations with some clear opportunities. Focused work on your lowest areas could make a noticeable difference to profit and your time."},
+  {min:40,label:"Building",colour:"var(--mid)",
+   text:"Parts of the business are working well, but some gaps are likely costing you time, money or peace of mind. Small structured changes tend to pay off quickly here."},
+  {min:0,label:"Foundations needed",colour:"var(--low)",
+   text:"Many owners start here – it simply means there's plenty of upside. Getting a few fundamentals in place will make the business easier to run and more profitable."}
+];
+
+/* ============================================================
+   APP
+   ============================================================ */
+const state = { step:-1, answers:{}, lead:{}, results:null };
+const app = document.getElementById("app");
+const TOTAL_STEPS = AREAS.length + 1; // areas + details form
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function scrollTop(){ try{ app.scrollIntoView({behavior:"smooth",block:"start"}); }catch(e){ window.scrollTo(0,0); } }
+
+function render(){
+  if(state.step === -1) return renderIntro();
+  if(state.step < AREAS.length) return renderArea(state.step);
+  if(state.step === AREAS.length) return renderDetails();
+  return renderResults();
+}
+
+function progress(){
+  const pct = Math.round((state.step / TOTAL_STEPS) * 100);
+  const label = state.step < AREAS.length ? `Section ${state.step+1} of ${AREAS.length}` : "Almost done";
+  return `<div class="progress"><div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+    <div class="lbl"><span>${label}</span><span>${pct}%</span></div></div>`;
+}
+
+function renderIntro(){
+  app.innerHTML = `<div class="card fade">
+    <div class="eyebrow">Free · ${AREAS.length*3} questions · about 5 minutes</div>
+    <h1>How healthy is your business?</h1>
+    <p class="muted">Take the ${esc(CONFIG.brandName)} ${esc(CONFIG.toolName)} to get an instant score across the eight areas that matter most for small businesses.</p>
+    <ul class="ticks">
+      <li>An overall business health score out of 100</li>
+      <li>A breakdown across ${AREAS.map(a=>a.name).slice(0,-1).join(", ")} and ${AREAS[AREAS.length-1].name}</li>
+      <li>Free, personalised improvement suggestions from an ${esc(CONFIG.brandName)} consultant by email</li>
+    </ul>
+    <p class="muted" style="font-size:14px">Answer honestly – there are no wrong answers, and the score is most useful when it reflects how things really are today.</p>
+    <div class="row"><button class="btn" id="start">Start the health check →</button></div>
+  </div>`;
+  document.getElementById("start").onclick = ()=>{ state.step = 0; render(); scrollTop(); };
+}
+
+function renderArea(i){
+  const a = AREAS[i];
+  const qsHtml = a.qs.map((q,qi)=>{
+    const key = `${a.id}_${qi}`;
+    return `<fieldset class="q" style="border:0;margin:0;padding-left:0;padding-right:0">
+      <legend style="padding:0"><h3>${qi+1}. ${esc(q)}</h3></legend>
+      <div class="scale">${SCALE.map(s=>`
+        <label><input type="radio" name="${key}" value="${s.v}" ${state.answers[key]===s.v?"checked":""}>
+        <span><b>${s.v}</b>${s.t}</span></label>`).join("")}
+      </div></fieldset>`;
+  }).join("");
+  app.innerHTML = `<div class="card fade">${progress()}
+    <div class="eyebrow">${esc(a.name)}</div>
+    <h2>How true are these statements for your business?</h2>
+    <form id="f">${qsHtml}
+      <div class="row">
+        <button type="button" class="btn ghost" id="back">← Back</button>
+        <button type="submit" class="btn" id="next" disabled>${i===AREAS.length-1?"See my score →":"Next →"}</button>
+      </div></form></div>`;
+  const f = document.getElementById("f"), next = document.getElementById("next");
+  const check = ()=>{ next.disabled = !a.qs.every((_,qi)=>state.answers[`${a.id}_${qi}`]!==undefined); };
+  f.addEventListener("change", e=>{ if(e.target.name){ state.answers[e.target.name]=Number(e.target.value); check(); }});
+  check();
+  document.getElementById("back").onclick = ()=>{ state.step--; render(); scrollTop(); };
+  f.onsubmit = e=>{ e.preventDefault(); state.step++; render(); scrollTop(); };
+}
+
+function renderDetails(){
+  const L = state.lead;
+  app.innerHTML = `<div class="card fade">${progress()}
+    <div class="eyebrow">Your score is ready</div>
+    <h2>Where should we send your free improvement suggestions?</h2>
+    <p class="muted">Your score appears on the next screen. An ${esc(CONFIG.brandName)} consultant will review your results and email you practical, personalised suggestions ${esc(CONFIG.followUpPromise)} – free, with no obligation.</p>
+    <form id="f" novalidate>
+      <div class="grid2">
+        <div class="field"><label for="fn">First name *</label><input id="fn" autocomplete="given-name" value="${esc(L.firstName||"")}"></div>
+        <div class="field"><label for="em">Email *</label><input id="em" type="email" autocomplete="email" value="${esc(L.email||"")}"></div>
+        <div class="field"><label for="bn">Business name</label><input id="bn" autocomplete="organization" value="${esc(L.business||"")}"></div>
+        <div class="field"><label for="ind">Industry</label>
+          <select id="ind">${["","Professional services","Trades & construction","Retail","Hospitality & food","Health & wellbeing","Manufacturing","Technology","Agriculture","Other"]
+            .map(o=>`<option ${L.industry===o?"selected":""} value="${esc(o)}">${o||"Select…"}</option>`).join("")}</select></div>
+        <div class="field"><label for="ts">Team size (incl. you)</label>
+          <select id="ts">${["","Just me","2–5","6–20","21–50","50+"]
+            .map(o=>`<option ${L.teamSize===o?"selected":""} value="${esc(o)}">${o||"Select…"}</option>`).join("")}</select></div>
+        <div class="field"><label for="yr">Years in business</label>
+          <select id="yr">${["","Under 1","1–3","3–10","10+"]
+            .map(o=>`<option ${L.years===o?"selected":""} value="${esc(o)}">${o||"Select…"}</option>`).join("")}</select></div>
+      </div>
+      <label class="consent"><input type="checkbox" id="ok" ${L.consent?"checked":""}>
+        <span>Yes, email me my results and free suggestions from ${esc(CONFIG.brandName)}. I can unsubscribe at any time.${CONFIG.privacyUrl?` <a href="${esc(CONFIG.privacyUrl)}" target="_blank" rel="noopener">Privacy policy</a>`:""}</span></label>
+      <div class="err" id="err"></div>
+      <div class="row">
+        <button type="button" class="btn ghost" id="back">← Back</button>
+        <button type="submit" class="btn" id="go">Show my score →</button>
+      </div></form></div>`;
+  document.getElementById("back").onclick = ()=>{ state.step--; render(); scrollTop(); };
+  document.getElementById("f").onsubmit = async e=>{
+    e.preventDefault();
+    const v = id=>document.getElementById(id).value.trim();
+    state.lead = { firstName:v("fn"), email:v("em"), business:v("bn"), industry:v("ind"),
+                   teamSize:v("ts"), years:v("yr"), consent:document.getElementById("ok").checked };
+    const err = document.getElementById("err");
+    if(!state.lead.firstName) return err.textContent="Please enter your first name.";
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(state.lead.email)) return err.textContent="Please enter a valid email address.";
+    if(!state.lead.consent) return err.textContent="Please tick the box so we can send your suggestions.";
+    err.textContent="";
+    const btn = document.getElementById("go"); btn.disabled=true; btn.textContent="Calculating…";
+    state.results = calculate();
+    await submit(buildPayload());
+    state.step++; render(); scrollTop();
+  };
+}
+
+function calculate(){
+  const areas = AREAS.map(a=>{
+    const sum = a.qs.reduce((t,_,qi)=>t+(state.answers[`${a.id}_${qi}`]||0),0);
+    return { id:a.id, name:a.name, tip:a.tip, score:Math.round(sum/(a.qs.length*4)*100) };
+  });
+  const overall = Math.round(areas.reduce((t,a)=>t+a.score,0)/areas.length);
+  const band = BANDS.find(b=>overall>=b.min);
+  const sorted = [...areas].sort((x,y)=>x.score-y.score);
+  return { overall, band, areas, focus:sorted.slice(0,3), strongest:sorted[sorted.length-1] };
+}
+
+function buildPayload(){
+  const r = state.results, L = state.lead;
+  const p = {
+    submitted_at:new Date().toISOString(), source:"Sutra – "+CONFIG.toolName,
+    first_name:L.firstName, email:L.email, business_name:L.business, industry:L.industry,
+    team_size:L.teamSize, years_in_business:L.years, marketing_consent:L.consent?"yes":"no",
+    overall_score:r.overall, score_band:r.band.label,
+    strongest_area:r.strongest.name, strongest_score:r.strongest.score
+  };
+  r.areas.forEach(a=>{ p[`score_${a.id}`]=a.score; });
+  r.focus.forEach((a,i)=>{ p[`focus_${i+1}_area`]=a.name; p[`focus_${i+1}_score`]=a.score; p[`focus_${i+1}_tip`]=a.tip; });
+  Object.entries(state.answers).forEach(([k,v])=>{ p[`q_${k}`]=v; });
+  return p;
+}
+
+async function submit(payload){
+  if(!CONFIG.webhookUrl){ console.info("[Health Check] No webhookUrl set. Payload:", payload); return; }
+  try{
+    // Form-encoded, no-cors: works with Zapier, Make, n8n etc. without CORS setup.
+    await Promise.race([
+      fetch(CONFIG.webhookUrl,{method:"POST",mode:"no-cors",body:new URLSearchParams(payload)}),
+      new Promise(r=>setTimeout(r,4000))
+    ]);
+  }catch(e){ console.warn("[Health Check] Submission failed", e); }
+}
+
+function colourFor(s){ return s>=80?"var(--great)":s>=60?"var(--good)":s>=40?"var(--mid)":"var(--low)"; }
+
+function renderResults(){
+  const r = state.results, L = state.lead, C = 2*Math.PI*86;
+  app.innerHTML = `<div class="card fade">
+    <div class="hero">
+      <div class="dial" role="img" aria-label="Overall score ${r.overall} out of 100">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="86" fill="none" stroke="var(--line)" stroke-width="16"/>
+          <circle id="arc" cx="100" cy="100" r="86" fill="none" stroke="${r.band.colour}" stroke-width="16"
+            stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/>
+        </svg>
+        <div class="num"><b id="n">0</b><small>out of 100</small></div>
+      </div>
+      <div>
+        <div class="eyebrow">${esc(L.firstName)}, your business health score</div>
+        <span class="band" style="background:${r.band.colour}">${r.band.label}</span>
+        <p>${r.band.text}</p>
+        <p class="muted" style="margin:0">Your strongest area is <b style="color:var(--ink)">${esc(r.strongest.name)}</b> (${r.strongest.score}).</p>
+      </div>
+    </div>
+
+    <div class="areas">${r.areas.map(a=>`
+      <div class="area"><div class="top"><b>${esc(a.name)}</b><span>${a.score}</span></div>
+      <div class="bar"><div class="fill" data-w="${a.score}" style="background:${colourFor(a.score)}"></div></div></div>`).join("")}
+    </div>
+
+    <h2 style="margin-top:34px">Your top 3 focus areas</h2>
+    <p class="muted">These are where a small improvement is likely to make the biggest difference. Here's a quick first step for each:</p>
+    <div class="focus">${r.focus.map(a=>`
+      <div class="item"><b>${esc(a.name)} – ${a.score}/100</b>${esc(a.tip)}</div>`).join("")}
+    </div>
+
+    <div class="next">
+      <h3>Your free suggestions are on the way</h3>
+      <p>An ${esc(CONFIG.brandName)} consultant will review your results and email practical, personalised suggestions to <b style="color:#fff">${esc(L.email)}</b> ${esc(CONFIG.followUpPromise)}.</p>
+      ${CONFIG.bookingUrl?`<a class="btn" href="${esc(CONFIG.bookingUrl)}" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">Book a free 20-minute chat →</a>`:""}
+    </div>
+
+    <div class="row" style="margin-top:20px">
+      <button class="btn ghost" id="print">Save / print my results</button>
+      <button class="btn ghost" id="redo">Retake the check</button>
+    </div>
+    <p class="small">This health check is a general self-assessment based on your own answers and is not financial or professional advice.</p>
+  </div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    document.getElementById("arc").style.strokeDashoffset = C*(1-r.overall/100);
+    document.querySelectorAll(".area .fill").forEach(el=>el.style.width=el.dataset.w+"%");
+    const n = document.getElementById("n"), t0 = performance.now();
+    (function tick(t){ const k=Math.min(1,(t-t0)/1200); n.textContent=Math.round(r.overall*(1-Math.pow(1-k,3))); if(k<1) requestAnimationFrame(tick); })(t0);
+  }));
+  document.getElementById("print").onclick = ()=>window.print();
+  document.getElementById("redo").onclick = ()=>{ state.step=-1; state.answers={}; state.results=null; render(); scrollTop(); };
+}
+
+render();
+</script>
+</body>
+</html>
